@@ -30,11 +30,12 @@ for mov in l_of_movs:
     omdb_r = requests.get(url = omdb_url, params = omdb_params)
     omdb_data = omdb_r.json()
     
-    mov_name = omdb_data['Title']
-    for rate in omdb_data['Ratings']:
-        if rate['Source'] == 'Rotten Tomatoes':
-            mov_score = rate['Value']
-    mov_imdbid = omdb_data['imdbID']
+    if omdb_data['Response'] == 'True':
+        mov_name = omdb_data['Title']
+        for rate in omdb_data['Ratings']:
+            if rate['Source'] == 'Rotten Tomatoes':
+                mov_score = rate['Value']
+        mov_imdbid = omdb_data['imdbID']
 
 
 ###   Take mov_imdbid and put into Box Office Mojo    ###
@@ -45,7 +46,10 @@ for mov in l_of_movs:
     sum_tab_divs = sum_tab.find_all('div', class_ = "a-section a-spacing-none")
     for divs in sum_tab_divs:
         if 'Worldwide' in divs.find('span', class_ = "a-size-small").text:
-            mov_box = divs.find('span', class_ = "money").text
+            if divs.find('span', class_ = "money"):
+                mov_box = divs.find('span', class_ = "money").text
+            else:
+                mov_box = "N/A"
 
 
 
