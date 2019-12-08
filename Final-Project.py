@@ -22,9 +22,7 @@ for movie in tmdb_data['results']:
 
 
 
-
-
-###   OMDB Takes list of movies and returns tuple of (Title, Score) ###
+###   OMDB Takes list of movies and returns their title, score, rating, and imdbid ###
 
 omdb_url = "http://www.omdbapi.com/?apikey=357b9dcf&"
 
@@ -39,25 +37,27 @@ for mov in l_of_mov_titles:
         for rate in omdb_data['Ratings']:
             if rate['Source'] == 'Rotten Tomatoes':
                 mov_score = int(rate['Value'].strip('%'))
+        mov_rating = omdb_data['Rated']
         mov_imdbid = omdb_data['imdbID']
+    
 
 
 ###   Take mov_imdbid and put into Box Office Mojo    ###
 
-    bom_url = "https://www.boxofficemojo.com/title/{}/?ref_=bo_se_r_1".format(mov_imdbid)
-    soup = BeautifulSoup(requests.get(bom_url).text, 'html.parser')
-    sum_tab = soup.find('div', class_ = "a-section a-spacing-none mojo-performance-summary-table")
-    sum_tab_divs = sum_tab.find_all('div', class_ = "a-section a-spacing-none")
-    for divs in sum_tab_divs:
-        if 'Worldwide' in divs.find('span', class_ = "a-size-small").text:
-            if divs.find('span', class_ = "money"):
-                mov_box = int(divs.find('span', class_ = "money").text.strip('$').replace(',', ''))
-            else:
-                mov_box = 'N/A'
+        bom_url = "https://www.boxofficemojo.com/title/{}/?ref_=bo_se_r_1".format(mov_imdbid)
+        soup = BeautifulSoup(requests.get(bom_url).text, 'html.parser')
+        sum_tab = soup.find('div', class_ = "a-section a-spacing-none mojo-performance-summary-table")
+        sum_tab_divs = sum_tab.find_all('div', class_ = "a-section a-spacing-none")
+        for divs in sum_tab_divs:
+            if 'Worldwide' in divs.find('span', class_ = "a-size-small").text:
+                if divs.find('span', class_ = "money"):
+                    mov_box = int(divs.find('span', class_ = "money").text.strip('$').replace(',', ''))
+                else:
+                    mov_box = 'N/A'
 
 
+        mov_tup = (mov_name, mov_rating, mov_score, mov_box)
+        l_of_movie_tups.append(mov_tup)
 
-    mov_tup = (mov_name, mov_score, mov_box)
-    l_of_movie_tups.append(mov_tup)
-
+print(len(l_of_movie_tups))
 print(l_of_movie_tups)
