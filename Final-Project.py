@@ -2,6 +2,10 @@ import json
 import requests
 from bs4 import BeautifulSoup
 
+
+
+l_of_movie_tups = []
+
 ###   TMDB Gives us a bunch of popular movies   ###
 
 tmdb_url = "https://api.themoviedb.org/3/movie/popular?api_key=773f87a98c4a4962613a1c61319b7edd&language=en-US&"
@@ -10,11 +14,11 @@ tmdb_params = {'page':'1'}
 tmdb_r = requests.get(url = tmdb_url, params = tmdb_params)
 tmdb_data = tmdb_r.json()
 
-l_of_movs = []
+l_of_mov_titles = []
 
 for movie in tmdb_data['results']:
     m_title = movie['title']
-    l_of_movs.append(m_title)
+    l_of_mov_titles.append(m_title)
 
 
 
@@ -24,7 +28,7 @@ for movie in tmdb_data['results']:
 
 omdb_url = "http://www.omdbapi.com/?apikey=357b9dcf&"
 
-for mov in l_of_movs:
+for mov in l_of_mov_titles:
     omdb_params = {'t':mov}
 
     omdb_r = requests.get(url = omdb_url, params = omdb_params)
@@ -34,7 +38,7 @@ for mov in l_of_movs:
         mov_name = omdb_data['Title']
         for rate in omdb_data['Ratings']:
             if rate['Source'] == 'Rotten Tomatoes':
-                mov_score = rate['Value']
+                mov_score = int(rate['Value'].strip('%'))
         mov_imdbid = omdb_data['imdbID']
 
 
@@ -47,11 +51,13 @@ for mov in l_of_movs:
     for divs in sum_tab_divs:
         if 'Worldwide' in divs.find('span', class_ = "a-size-small").text:
             if divs.find('span', class_ = "money"):
-                mov_box = divs.find('span', class_ = "money").text
+                mov_box = int(divs.find('span', class_ = "money").text.strip('$').replace(',', ''))
             else:
-                mov_box = "N/A"
+                mov_box = 'N/A'
 
 
 
     mov_tup = (mov_name, mov_score, mov_box)
-    print(mov_tup)
+    l_of_movie_tups.append(mov_tup)
+
+print(l_of_movie_tups)
