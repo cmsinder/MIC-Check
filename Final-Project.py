@@ -6,7 +6,7 @@ from bs4 import BeautifulSoup
 
 l_of_movie_tups = []
 
-###   TMDB Gives us a bunch of popular movies   ###
+###   TMDB Popular gives us a bunch of popular movies   ###
 
 tmdb_url = "https://api.themoviedb.org/3/movie/popular?api_key=773f87a98c4a4962613a1c61319b7edd&language=en-US&"
 tmdb_params = {'page':'1'}      # Need to change page number each time we run
@@ -29,6 +29,13 @@ for movie in tmdb_data['results']:
     m_tmbdid = movie['id']
     title_id_tup = (m_title, m_tmbdid)
     l_of_title_id_tups.append(title_id_tup)     # Create a table of titles and their TMDB ids, to be used in the other TMDB API
+
+
+
+###   TMDB Details provides information on movies, takes TMDBid as input  ###
+
+tmdb_details_url = "https://api.themoviedb.org/3/movie/{}?api_key=773f87a98c4a4962613a1c61319b7edd&language=en-US"  # Ask about how this works or if it counts. Could I do {movie_id} and then set a parameter to change that?
+
 
 
 ###   OMDB Takes list of movies and returns their title, score, rating, and imdbid ###
