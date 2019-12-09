@@ -113,6 +113,7 @@ for mov in l_of_mov_titles:
 
 calendar_url = "https://calendarific.com/api/v2/json"
 l_of_title_holiday_tups = []
+l_of_title_hnames_tups = []
 
 
 for mov in l_of_title_release_tups:
@@ -125,10 +126,15 @@ for mov in l_of_title_release_tups:
     for holiday in calendar_data['response']['holidays']:
         if holiday['date']['iso'] == mov[1]:
             is_holiday = True
+            holdiay_name = holiday['name']
         else:
             is_holiday = False
+            holdiay_name = 'N/A'
 
     title_holiday_tup = (mov[0], is_holiday)
     l_of_title_holiday_tups.append(title_holiday_tup)
+
+    title_hname_tup = (mov[0], holdiay_name)
+    l_of_title_hnames_tups.append(title_hname_tup)
 
 print(l_of_title_holiday_tups)
