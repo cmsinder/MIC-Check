@@ -34,7 +34,7 @@ for movie in tmdb_data['results']:
 
 ###   TMDB Details provides information on movies, takes TMDBid as input  ###
 
-tmdb_details_url = "https://api.themoviedb.org/3/movie/{}?api_key=773f87a98c4a4962613a1c61319b7edd&language=en-US"  # Ask about how this works or if it counts. Could I do {movie_id} and then set a parameter to change that?
+# tmdb_details_url = "https://api.themoviedb.org/3/movie/{}?api_key=773f87a98c4a4962613a1c61319b7edd&language=en-US"  # Ask about how this works or if it counts. Could I do {movie_id} and then set a parameter to change that?
 
 
 
@@ -87,22 +87,48 @@ for mov in l_of_mov_titles:
         # mov_tup = (mov_name, mov_rating, mov_score, mov_box)
         # l_of_movie_tups.append(mov_tup)
 
-print('Printing title and release date: ')
+#print('Printing title and release date: ')
 
-print(l_of_title_release_tups)
+#print(l_of_title_release_tups)
 
-print('Printing title and ids: ')
+#print('Printing title and ids: ')
 
-print(l_of_title_id_tups)
+#print(l_of_title_id_tups)
 
-print('Printing title and scores: ')
+#print('Printing title and scores: ')
 
-print(l_of_title_score_tups)
+#print(l_of_title_score_tups)
 
-print('Printing title and ratings: ')
+#print('Printing title and ratings: ')
 
-print(l_of_title_rating_tups)
+#print(l_of_title_rating_tups)
 
-print('Printing title and box office: ')
+#print('Printing title and box office: ')
 
-print(l_of_title_boxoffice_tups)
+#print(l_of_title_boxoffice_tups)
+
+
+
+###   Calendar API gives list of public holidays. Country needs to be specified, so I'm doing US, but should we change the box office to only get domestic as well?   ###
+
+calendar_url = "https://calendarific.com/api/v2/json"
+l_of_title_holiday_tups = []
+
+
+for mov in l_of_title_release_tups:
+    date_split = mov[1].split('-')
+    calendar_params = {'api_key': '389c950ba1a94b1523ea48ee8ade9820b50815ac', 'country': 'US', 'year': date_split[0], 'type': 'national'}
+
+    calendar_r = requests.get(calendar_url, calendar_params)
+    calendar_data = calendar_r.json()
+
+    for holiday in calendar_data['response']['holidays']:
+        if holiday['date']['iso'] == mov[1]:
+            is_holiday = True
+        else:
+            is_holiday = False
+
+    title_holiday_tup = (mov[0], is_holiday)
+    l_of_title_holiday_tups.append(title_holiday_tup)
+
+print(l_of_title_holiday_tups)
