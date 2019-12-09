@@ -87,3 +87,22 @@ for mov in l_of_mov_titles:
         # mov_tup = (mov_name, mov_rating, mov_score, mov_box)
         # l_of_movie_tups.append(mov_tup)
 
+print('Printing title and release date: ')
+
+print(l_of_title_release_tups)
+
+print('Printing title and ids: ')
+
+print(l_of_title_id_tups)
+
+print('Printing title and scores: ')
+
+print(l_of_title_score_tups)
+
+print('Printing title and ratings: ')
+
+print(l_of_title_rating_tups)
+
+print('Printing title and box office: ')
+
+print(l_of_title_boxoffice_tups)
