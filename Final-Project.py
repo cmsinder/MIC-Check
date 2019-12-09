@@ -9,22 +9,35 @@ l_of_movie_tups = []
 ###   TMDB Gives us a bunch of popular movies   ###
 
 tmdb_url = "https://api.themoviedb.org/3/movie/popular?api_key=773f87a98c4a4962613a1c61319b7edd&language=en-US&"
-tmdb_params = {'page':'1'}
+tmdb_params = {'page':'1'}      # Need to change page number each time we run
 
 tmdb_r = requests.get(url = tmdb_url, params = tmdb_params)
 tmdb_data = tmdb_r.json()
 
 l_of_mov_titles = []
+l_of_title_release_tups = []
+l_of_title_id_tups = []
 
 for movie in tmdb_data['results']:
     m_title = movie['title']
     l_of_mov_titles.append(m_title)
+    
+    m_release = movie['release_date']
+    title_release_tup = (m_title, m_release)
+    l_of_title_release_tups.append(title_release_tup)   # Create a table of titles and release dates
 
+    m_tmbdid = movie['id']
+    title_id_tup = (m_title, m_tmbdid)
+    l_of_title_id_tups.append(title_id_tup)     # Create a table of titles and their TMDB ids, to be used in the other TMDB API
 
 
 ###   OMDB Takes list of movies and returns their title, score, rating, and imdbid ###
 
 omdb_url = "http://www.omdbapi.com/?apikey=357b9dcf&"
+
+l_of_title_score_tups = []
+l_of_title_rating_tups = []
+l_of_title_boxoffice_tups = []
 
 for mov in l_of_mov_titles:
     omdb_params = {'t':mov}
@@ -55,9 +68,15 @@ for mov in l_of_mov_titles:
                 else:
                     mov_box = 'N/A'
 
+        title_score_tup = (mov_name, mov_score)
+        l_of_title_score_tups.append(title_score_tup)
+        
+        title_rating_tup = (mov_name, mov_rating)
+        l_of_title_rating_tups.append(title_rating_tup)
+        
+        title_boxoffice_tup = (mov_name, mov_box)
+        l_of_title_boxoffice_tups.append(title_boxoffice_tup)
 
-        mov_tup = (mov_name, mov_rating, mov_score, mov_box)
-        l_of_movie_tups.append(mov_tup)
+        # mov_tup = (mov_name, mov_rating, mov_score, mov_box)
+        # l_of_movie_tups.append(mov_tup)
 
-print(len(l_of_movie_tups))
-print(l_of_movie_tups)
