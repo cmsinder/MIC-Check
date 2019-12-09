@@ -117,19 +117,20 @@ l_of_title_hnames_tups = []
 
 
 for mov in l_of_title_release_tups:
-    date_split = mov[1].split('-')
-    calendar_params = {'api_key': '389c950ba1a94b1523ea48ee8ade9820b50815ac', 'country': 'US', 'year': date_split[0], 'type': 'national'}
+    date_split = mov[1].split('-')  # Date is in the form of 'year-mo-da', so splitting it makes that a list to be indexed from
+    calendar_params = {'api_key': '389c950ba1a94b1523ea48ee8ade9820b50815ac', 'country': 'US', 'year': int(date_split[0]), 'type': 'national', 'day': int(date_split[2]), 'month': int(date_split[1])}
 
     calendar_r = requests.get(calendar_url, calendar_params)
     calendar_data = calendar_r.json()
 
-    for holiday in calendar_data['response']['holidays']:
-        if holiday['date']['iso'] == mov[1]:
-            is_holiday = True
+    if len(calendar_data['response']['holidays']) > 0:
+        is_holiday = True
+
+        for holiday in calendar_data['response']['holidays']:
             holdiay_name = holiday['name']
-        else:
-            is_holiday = False
-            holdiay_name = 'N/A'
+    else:
+        is_holiday = False
+        holdiay_name = 'N/A'
 
     title_holiday_tup = (mov[0], is_holiday)
     l_of_title_holiday_tups.append(title_holiday_tup)
@@ -137,4 +138,3 @@ for mov in l_of_title_release_tups:
     title_hname_tup = (mov[0], holdiay_name)
     l_of_title_hnames_tups.append(title_hname_tup)
 
-print(l_of_title_holiday_tups)
