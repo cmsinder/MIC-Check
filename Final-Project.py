@@ -144,3 +144,20 @@ for mov in l_of_title_release_tups:
     title_hname_tup = (mov[0], holdiay_name)
     l_of_title_hnames_tups.append(title_hname_tup)
 
+cur.execute("CREATE TABLE IF NOT EXISTS TitleAndReleaseDate (title TEXT PRIMARY KEY, date TEXT)")
+cur.execute("CREATE TABLE IF NOT EXISTS TitleAndID (title TEXT PRIMARY KEY, tmdbID INTEGER)")
+cur.execute("CREATE TABLE IF NOT EXISTS TitleAndScore (title TEXT PRIMARY KEY, score INTEGER)")
+cur.execute("CREATE TABLE IF NOT EXISTS TitleAndRatings (title TEXT PRIMARY KEY, rating TEXT)")
+cur.execute("CREATE TABLE IF NOT EXISTS TitleAndBoxOffice (title TEXT PRIMARY KEY, boxoffice INTEGER)")
+cur.execute("CREATE TABLE IF NOT EXISTS TitleAndHoliday (title TEXT PRIMARY KEY, holiday BIT)")
+cur.execute("CREATE TABLE IF NOT EXISTS TitleAndHolidayName (title TEXT PRIMARY KEY, holidayname TEXT)")
+
+cur.executemany('INSERT INTO TitleAndReleaseDate (title, date) VALUES (?, ?)', l_of_title_release_tups)
+cur.executemany('INSERT INTO TitleAndID (title, tmdbID) VALUES (?, ?)', l_of_title_id_tups)
+cur.executemany('INSERT INTO TitleAndScore (title, score) VALUES (?, ?)', l_of_title_score_tups)
+cur.executemany('INSERT INTO TitleAndRatings (title, rating) VALUES (?, ?)', l_of_title_rating_tups)
+cur.executemany('INSERT INTO TitleAndBoxOffice (title, boxoffice) VALUES (?, ?)', l_of_title_boxoffice_tups)
+cur.executemany('INSERT INTO TitleAndHoliday (title, holiday) VALUES (?, ?)', l_of_title_holiday_tups)
+cur.executemany('INSERT INTO TitleAndHolidayName (title, holidayname) VALUES (?, ?)', l_of_title_hnames_tups)
+
+conn.commit()
