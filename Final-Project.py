@@ -23,6 +23,7 @@ tmdb_data = tmdb_r.json()
 l_of_mov_titles = []
 l_of_title_release_tups = []
 l_of_title_id_tups = []
+l_of_title_release_year_tups = []
 
 for movie in tmdb_data['results']:
     m_title = movie['title']
@@ -31,6 +32,11 @@ for movie in tmdb_data['results']:
     m_release = movie['release_date']
     title_release_tup = (m_title, m_release)
     l_of_title_release_tups.append(title_release_tup)   # Create a table of titles and release dates
+
+    release_year = int(m_release.split('-')[0])
+    title_release_year_tup = (m_title, release_year)
+    l_of_title_release_year_tups.append(title_release_year_tup)
+
 
     m_tmbdid = movie['id']
     title_id_tup = (m_title, m_tmbdid)
@@ -153,7 +159,7 @@ for mov in l_of_title_release_tups:
     title_hname_tup = (mov[0], holdiay_name)
     l_of_title_hnames_tups.append(title_hname_tup)
 
-cur.execute("CREATE TABLE IF NOT EXISTS TitleAndReleaseDate (title TEXT PRIMARY KEY, date TEXT)")
+cur.execute("CREATE TABLE IF NOT EXISTS TitleAndReleaseYear (title TEXT PRIMARY KEY, year INTEGER)")
 cur.execute("CREATE TABLE IF NOT EXISTS TitleAndGenre (title TEXT PRIMARY KEY, genre TEXT)")
 cur.execute("CREATE TABLE IF NOT EXISTS TitleAndScore (title TEXT PRIMARY KEY, score INTEGER)")
 cur.execute("CREATE TABLE IF NOT EXISTS TitleAndRatings (title TEXT PRIMARY KEY, rating TEXT)")
@@ -161,7 +167,7 @@ cur.execute("CREATE TABLE IF NOT EXISTS TitleAndBoxOffice (title TEXT PRIMARY KE
 cur.execute("CREATE TABLE IF NOT EXISTS TitleAndHoliday (title TEXT PRIMARY KEY, holiday BIT)")
 cur.execute("CREATE TABLE IF NOT EXISTS TitleAndHolidayName (title TEXT PRIMARY KEY, holidayname TEXT)")
 
-cur.executemany('INSERT INTO TitleAndReleaseDate (title, date) VALUES (?, ?)', l_of_title_release_tups)
+cur.executemany('INSERT INTO TitleAndReleaseYear (title, year) VALUES (?, ?)', l_of_title_release_year_tups)
 cur.executemany('INSERT INTO TitleAndGenre (title, genre) VALUES (?, ?)', l_of_title_genre_tups)
 cur.executemany('INSERT INTO TitleAndScore (title, score) VALUES (?, ?)', l_of_title_score_tups)
 cur.executemany('INSERT INTO TitleAndRatings (title, rating) VALUES (?, ?)', l_of_title_rating_tups)
