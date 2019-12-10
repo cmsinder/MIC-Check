@@ -15,7 +15,7 @@ l_of_movie_tups = []
 ###   TMDB Popular gives us a bunch of popular movies   ###
 
 tmdb_url = "https://api.themoviedb.org/3/movie/popular?api_key=773f87a98c4a4962613a1c61319b7edd&language=en-US&"
-tmdb_params = {'page':'1'}      # Need to change page number each time we run. Will run from 1-6 pages.
+tmdb_params = {'page':'6'}      # Need to change page number each time we run. Will run from 1-6 pages.
 
 tmdb_r = requests.get(url = tmdb_url, params = tmdb_params)
 tmdb_data = tmdb_r.json()
@@ -162,7 +162,7 @@ cur.execute("CREATE TABLE IF NOT EXISTS TitleAndHoliday (title TEXT PRIMARY KEY,
 cur.execute("CREATE TABLE IF NOT EXISTS TitleAndHolidayName (title TEXT PRIMARY KEY, holidayname TEXT)")
 
 cur.executemany('INSERT INTO TitleAndReleaseDate (title, date) VALUES (?, ?)', l_of_title_release_tups)
-cur.executemany('INSERT INTO TitleAndID (title, tmdbID) VALUES (?, ?)', l_of_title_id_tups)
+cur.executemany('INSERT INTO TitleAndGenre (title, genre) VALUES (?, ?)', l_of_title_genre_tups)
 cur.executemany('INSERT INTO TitleAndScore (title, score) VALUES (?, ?)', l_of_title_score_tups)
 cur.executemany('INSERT INTO TitleAndRatings (title, rating) VALUES (?, ?)', l_of_title_rating_tups)
 cur.executemany('INSERT INTO TitleAndBoxOffice (title, boxoffice) VALUES (?, ?)', l_of_title_boxoffice_tups)
