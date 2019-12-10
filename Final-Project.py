@@ -15,7 +15,7 @@ l_of_movie_tups = []
 ###   TMDB Popular gives us a bunch of popular movies   ###
 
 tmdb_url = "https://api.themoviedb.org/3/movie/popular?api_key=773f87a98c4a4962613a1c61319b7edd&language=en-US&"
-tmdb_params = {'page':'6'}      # Need to change page number each time we run. Will run from 1-6 pages.
+tmdb_params = {'page':'1'}      # Need to change page number each time we run. Will run from 1-6 pages.
 
 tmdb_r = requests.get(url = tmdb_url, params = tmdb_params)
 tmdb_data = tmdb_r.json()
@@ -40,7 +40,16 @@ for movie in tmdb_data['results']:
 
 ###   TMDB Details provides information on movies, takes TMDBid as input  ###
 
-# tmdb_details_url = "https://api.themoviedb.org/3/movie/{}?api_key=773f87a98c4a4962613a1c61319b7edd&language=en-US"  # Ask about how this works or if it counts. Could I do {movie_id} and then set a parameter to change that?
+l_of_title_genre_tups = []
+
+for mov in l_of_title_id_tups:
+    tmdb_details_url = "https://api.themoviedb.org/3/movie/{}?api_key=773f87a98c4a4962613a1c61319b7edd&language=en-US".format(mov[1])
+    deets_r = requests.get(tmdb_details_url)
+    deets_data = deets_r.json()
+
+    mov_genre = deets_data['genres'][0]['name']     # Only getting first genre entry. Too many combinations would make a visualization too complex.
+    title_genre_tup = (mov[0], mov_genre)
+    l_of_title_genre_tups.append(title_genre_tup)
 
 
 
@@ -145,7 +154,7 @@ for mov in l_of_title_release_tups:
     l_of_title_hnames_tups.append(title_hname_tup)
 
 cur.execute("CREATE TABLE IF NOT EXISTS TitleAndReleaseDate (title TEXT PRIMARY KEY, date TEXT)")
-cur.execute("CREATE TABLE IF NOT EXISTS TitleAndID (title TEXT PRIMARY KEY, tmdbID INTEGER)")
+cur.execute("CREATE TABLE IF NOT EXISTS TitleAndGenre (title TEXT PRIMARY KEY, genre TEXT)")
 cur.execute("CREATE TABLE IF NOT EXISTS TitleAndScore (title TEXT PRIMARY KEY, score INTEGER)")
 cur.execute("CREATE TABLE IF NOT EXISTS TitleAndRatings (title TEXT PRIMARY KEY, rating TEXT)")
 cur.execute("CREATE TABLE IF NOT EXISTS TitleAndBoxOffice (title TEXT PRIMARY KEY, boxoffice INTEGER)")
