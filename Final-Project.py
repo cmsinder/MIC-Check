@@ -162,11 +162,4 @@ cur.executemany('INSERT INTO TitleAndHolidayName (title, holidayname) VALUES (?,
 
 conn.commit()
 
-###   Joining TitleAndScore with TitleAndBoxOffice  ###
-
-
-
-
-
-###   MATH    ###
 
