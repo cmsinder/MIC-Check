@@ -65,7 +65,7 @@ def calculate_from_db(x, y):
         x_table_title = 'TitleAndBoxOffice'
     elif x == 'holiday':
         x_table_title = 'TitleAndHoliday'
-    elif x == 'holidayname'
+    elif x == 'holidayname':
         x_table_title = 'TitleAndHolidayName'
 
 
