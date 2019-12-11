@@ -15,7 +15,7 @@ l_of_movie_tups = []
 ###   TMDB Popular gives us a bunch of popular movies   ###
 
 tmdb_url = "https://api.themoviedb.org/3/movie/popular?api_key=773f87a98c4a4962613a1c61319b7edd&language=en-US&"
-tmdb_params = {'page':'9'}      # Need to change page number each time we run. Will run from 1-6 pages.
+tmdb_params = {'page':'6'}      # Need to change page number each time we run. Will run from 1-6 pages.
 
 tmdb_r = requests.get(url = tmdb_url, params = tmdb_params)
 tmdb_data = tmdb_r.json()
@@ -78,6 +78,8 @@ for mov in l_of_mov_titles:
         for rate in omdb_data['Ratings']:
             if rate['Source'] == 'Rotten Tomatoes':
                 mov_score = int(rate['Value'].strip('%'))
+            else:
+                mov_score = 'N/A'
         mov_rating = omdb_data['Rated']
         mov_imdbid = omdb_data['imdbID']
     
