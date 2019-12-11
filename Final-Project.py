@@ -15,7 +15,7 @@ l_of_movie_tups = []
 ###   TMDB Popular gives us a bunch of popular movies   ###
 
 tmdb_url = "https://api.themoviedb.org/3/movie/popular?api_key=773f87a98c4a4962613a1c61319b7edd&language=en-US&"
-tmdb_params = {'page':'6'}      # Need to change page number each time we run. Will run from 1-6 pages.
+tmdb_params = {'page':'9'}      # Need to change page number each time we run. Will run from 1-6 pages.
 
 tmdb_r = requests.get(url = tmdb_url, params = tmdb_params)
 tmdb_data = tmdb_r.json()
