@@ -15,7 +15,7 @@ l_of_movie_tups = []
 ###   TMDB Popular gives us a bunch of popular movies   ###
 
 tmdb_url = "https://api.themoviedb.org/3/movie/popular?api_key=773f87a98c4a4962613a1c61319b7edd&language=en-US&"
-tmdb_params = {'page':'6'}      # Need to change page number each time we run. Will run from 1-6 pages.
+tmdb_params = {'page':'1'}      # Need to change page number each time we run. Will run from 1-6 pages.
 
 tmdb_r = requests.get(url = tmdb_url, params = tmdb_params)
 tmdb_data = tmdb_r.json()
@@ -146,20 +146,23 @@ for mov in l_of_title_release_tups:
     calendar_r = requests.get(calendar_url, calendar_params)
     calendar_data = calendar_r.json()
 
-    if len(calendar_data['response']['holidays']) > 0:
-        is_holiday = True
-
-        for holiday in calendar_data['response']['holidays']:
-            holdiay_name = holiday['name']
+    if calendar_data['meta']['code'] == 426:
+        print('Too many requests')
     else:
-        is_holiday = False
-        holdiay_name = 'N/A'
+        if len(calendar_data['response']['holidays']) > 0:
+            is_holiday = True
 
-    title_holiday_tup = (mov[0], is_holiday)
-    l_of_title_holiday_tups.append(title_holiday_tup)
+            for holiday in calendar_data['response']['holidays']:
+                holdiay_name = holiday['name']
+        else:
+            is_holiday = False
+            holdiay_name = 'N/A'
 
-    title_hname_tup = (mov[0], holdiay_name)
-    l_of_title_hnames_tups.append(title_hname_tup)
+        title_holiday_tup = (mov[0], is_holiday)
+        l_of_title_holiday_tups.append(title_holiday_tup)
+
+        title_hname_tup = (mov[0], holdiay_name)
+        l_of_title_hnames_tups.append(title_hname_tup)
 
 cur.execute("CREATE TABLE IF NOT EXISTS TitleAndReleaseYear (title TEXT PRIMARY KEY, year INTEGER)")
 cur.execute("CREATE TABLE IF NOT EXISTS TitleAndGenre (title TEXT PRIMARY KEY, genre TEXT)")
