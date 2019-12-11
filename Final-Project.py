@@ -15,7 +15,7 @@ l_of_movie_tups = []
 ###   TMDB Popular gives us a bunch of popular movies   ###
 
 tmdb_url = "https://api.themoviedb.org/3/movie/popular?api_key=773f87a98c4a4962613a1c61319b7edd&language=en-US&"
-tmdb_params = {'page':'1'}      # Need to change page number each time we run. Will run from 1-6 pages.
+tmdb_params = {'page':'8'}      # Need to change page number each time we run. Will run from 1-6 pages.
 
 tmdb_r = requests.get(url = tmdb_url, params = tmdb_params)
 tmdb_data = tmdb_r.json()
@@ -73,16 +73,16 @@ for mov in l_of_mov_titles:
     omdb_r = requests.get(url = omdb_url, params = omdb_params)
     omdb_data = omdb_r.json()
     
+    mov_score = 'N/A' # Check if same, to set to N/A
+
     if omdb_data['Response'] == 'True':
         mov_name = omdb_data['Title']
         for rate in omdb_data['Ratings']:
             if rate['Source'] == 'Rotten Tomatoes':
                 mov_score = int(rate['Value'].strip('%'))
-            else:
-                mov_score = 'N/A'
+
         mov_rating = omdb_data['Rated']
         mov_imdbid = omdb_data['imdbID']
-    
 
 
 ###   Take mov_imdbid and put into Box Office Mojo    ###
@@ -141,7 +141,7 @@ l_of_title_hnames_tups = []
 
 for mov in l_of_title_release_tups:
     date_split = mov[1].split('-')  # Date is in the form of 'year-mo-da', so splitting it makes that a list to be indexed from
-    calendar_params = {'api_key': '389c950ba1a94b1523ea48ee8ade9820b50815ac', 'country': 'US', 'year': int(date_split[0]), 'type': 'national', 'day': int(date_split[2]), 'month': int(date_split[1])}
+    calendar_params = {'api_key': '8b930238458244090853b138d064c2bf6e65daf7', 'country': 'US', 'year': int(date_split[0]), 'type': 'national', 'day': int(date_split[2]), 'month': int(date_split[1])}      # API Keys: 8b930238458244090853b138d064c2bf6e65daf7, 389c950ba1a94b1523ea48ee8ade9820b50815ac
 
     calendar_r = requests.get(calendar_url, calendar_params)
     calendar_data = calendar_r.json()
