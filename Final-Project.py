@@ -15,47 +15,21 @@ l_of_movie_tups = []
 ###   TMDB Popular gives us a bunch of popular movies   ###
 
 tmdb_url = "https://api.themoviedb.org/3/movie/popular?api_key=773f87a98c4a4962613a1c61319b7edd&language=en-US&"
-tmdb_params = {'page':'8'}      # Need to change page number each time we run. Will run from 1-6 pages.
+tmdb_params = {'page':'7'}      # Need to change page number each time we run. Will run from 1-6 pages.
 
 tmdb_r = requests.get(url = tmdb_url, params = tmdb_params)
 tmdb_data = tmdb_r.json()
+tmdb_results = tmdb_data['results']
 
 l_of_mov_titles = []
 l_of_title_release_tups = []
 l_of_title_id_tups = []
 l_of_title_release_year_tups = []
-
-for movie in tmdb_data['results']:
-    m_title = movie['title']
-    l_of_mov_titles.append(m_title)
-    
-    m_release = movie['release_date']
-    title_release_tup = (m_title, m_release)
-    l_of_title_release_tups.append(title_release_tup)   # Create a table of titles and release dates
-
-    release_year = int(m_release.split('-')[0])
-    title_release_year_tup = (m_title, release_year)
-    l_of_title_release_year_tups.append(title_release_year_tup)
-
-
-    m_tmbdid = movie['id']
-    title_id_tup = (m_title, m_tmbdid)
-    l_of_title_id_tups.append(title_id_tup)     # Create a table of titles and their TMDB ids, to be used in the other TMDB API
-
-
-
-###   TMDB Details provides information on movies, takes TMDBid as input  ###
-
 l_of_title_genre_tups = []
 
-for mov in l_of_title_id_tups:
-    tmdb_details_url = "https://api.themoviedb.org/3/movie/{}?api_key=773f87a98c4a4962613a1c61319b7edd&language=en-US".format(mov[1])
-    deets_r = requests.get(tmdb_details_url)
-    deets_data = deets_r.json()
-
-    mov_genre = deets_data['genres'][0]['name']     # Only getting first genre entry. Too many combinations would make a visualization too complex.
-    title_genre_tup = (mov[0], mov_genre)
-    l_of_title_genre_tups.append(title_genre_tup)
+for movie in tmdb_results:
+    m_title = movie['title']
+    l_of_mov_titles.append(m_title)
 
 
 
@@ -63,9 +37,11 @@ for mov in l_of_title_id_tups:
 
 omdb_url = "http://www.omdbapi.com/?apikey=357b9dcf&"
 
+omdb_l_of_titles = []
 l_of_title_score_tups = []
 l_of_title_rating_tups = []
 l_of_title_boxoffice_tups = []
+final_l_of_titles = []
 
 for mov in l_of_mov_titles:
     omdb_params = {'t':mov}
@@ -77,6 +53,8 @@ for mov in l_of_mov_titles:
 
     if omdb_data['Response'] == 'True':
         mov_name = omdb_data['Title']
+        omdb_l_of_titles.append(mov_name)
+
         for rate in omdb_data['Ratings']:
             if rate['Source'] == 'Rotten Tomatoes':
                 mov_score = int(rate['Value'].strip('%'))
@@ -110,26 +88,37 @@ for mov in l_of_mov_titles:
         # mov_tup = (mov_name, mov_rating, mov_score, mov_box)
         # l_of_movie_tups.append(mov_tup)
 
-#print('Printing title and release date: ')
 
-#print(l_of_title_release_tups)
 
-#print('Printing title and ids: ')
+###   Fixing list of movie titles for other actions below ###
 
-#print(l_of_title_id_tups)
+for movie in tmdb_results:
+    if movie['title'] in omdb_l_of_titles:
+        m_release = movie['release_date']
+        title_release_tup = (movie['title'], m_release)
+        l_of_title_release_tups.append(title_release_tup)   # Create a table of titles and release dates
 
-#print('Printing title and scores: ')
+        release_year = int(m_release.split('-')[0])
+        title_release_year_tup = (movie['title'], release_year)
+        l_of_title_release_year_tups.append(title_release_year_tup)
 
-#print(l_of_title_score_tups)
+        m_tmbdid = movie['id']
+        title_id_tup = (movie['title'], m_tmbdid)
+        l_of_title_id_tups.append(title_id_tup)     # Create a table of titles and their TMDB ids, to be used in the other TMDB API
 
-#print('Printing title and ratings: ')
 
-#print(l_of_title_rating_tups)
 
-#print('Printing title and box office: ')
+###   TMDB Details provides information on movies, takes TMDBid as input  ###
 
-#print(l_of_title_boxoffice_tups)
 
+for mov in l_of_title_id_tups:
+    tmdb_details_url = "https://api.themoviedb.org/3/movie/{}?api_key=773f87a98c4a4962613a1c61319b7edd&language=en-US".format(mov[1])
+    deets_r = requests.get(tmdb_details_url)
+    deets_data = deets_r.json()
+
+    mov_genre = deets_data['genres'][0]['name']     # Only getting first genre entry. Too many combinations would make a visualization too complex.
+    title_genre_tup = (mov[0], mov_genre)
+    l_of_title_genre_tups.append(title_genre_tup)
 
 
 ###   Calendar API gives list of public holidays. Country needs to be specified, so I'm doing US, but should we change the box office to only get domestic as well?   ###
