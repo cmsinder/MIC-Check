@@ -28,10 +28,10 @@ for row in cur:
         dict_of_ratings['R'].append(row[1])
 
 
-avg_G_bo = statistics.mean(dict_of_ratings['G'])
-avg_PG_bo = statistics.mean(dict_of_ratings['PG'])
-avg_PG13_bo = statistics.mean(dict_of_ratings['PG-13'])
-avg_R_bo = statistics.mean(dict_of_ratings['R'])
+#avg_G_bo = statistics.mean(dict_of_ratings['G'])
+#avg_PG_bo = statistics.mean(dict_of_ratings['PG'])
+#avg_PG13_bo = statistics.mean(dict_of_ratings['PG-13'])
+#avg_R_bo = statistics.mean(dict_of_ratings['R'])
 
 
 ###   Writing calculations to a file  ###
@@ -41,8 +41,8 @@ root_path = os.path.dirname(os.path.abspath(__file__))
 w_filename = root_path + '/' + "AverageBoxOfficeByRating.txt"
 outfile = open(w_filename, 'w')
 
-for rating in dict_of_ratings.keys():
-    outfile.write("The average money earned at the Box Office for movies rated {} was: $".format(rating) + str(round(statistics.mean(dict_of_ratings[rating]))) + '\n')
+#for rating in dict_of_ratings.keys():
+#    outfile.write("The average money earned at the Box Office for movies rated {} was: $".format(rating) + str(round(statistics.mean(dict_of_ratings[rating]))) + '\n')
 
 outfile.close()
 
@@ -87,14 +87,21 @@ def calculate_from_db(x, y):
 
     cur.execute("SELECT {} FROM {}".format(x, x_table_title))
     for row in cur:
-        if row not in dict_for_analysis:
-            dict_for_analysis[row] = []
+        k = row[0]
+        if k not in dict_for_analysis:
+            dict_for_analysis[k] = []
     
     cur.execute("SELECT {}, {} FROM {} LEFT JOIN {} ON {}.title = {}.title".format(x, y, x_table_title, y_table_title, x_table_title, y_table_title))
 
     for row in cur:
         for k in dict_for_analysis.keys():
             if row[0] == k:
-                dict_for_analysis[k].append(row[1])
+                if row[1] == 'N/A':
+                    continue
+                else:
+                    dict_for_analysis[k].append(row[1])
     
     return dict_for_analysis
+
+
+print(calculate_from_db('rating', 'boxoffice'))
