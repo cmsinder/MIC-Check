@@ -232,9 +232,9 @@ for i in total:
         avg_box.append(0)
 print(avg_box)
 
-plt.bar(genre, avg_box, color = ('green', 'blue', 'green', 'blue', 'green', 'blue', 'blue'))
+plt.bar(genre, avg_box, color = ('purple', 'blue', 'yellow', 'orange', 'green', 'purple', 'blue'))
 plt.xlabel("Genre")
-plt.ylabel("Mean Box Office Across Genre in $Billion USD")
+plt.ylabel("Mean Box Office Across Genre in $100M USD")
 plt.title("Average Box Office by Genre for Top 100 Movies From List")
 plt.tight_layout()
 
