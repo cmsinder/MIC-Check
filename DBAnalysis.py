@@ -3,6 +3,8 @@ import os
 import statistics
 import matplotlib
 import matplotlib.pyplot as plt
+matplotlib.axes.Axes.pie
+matplotlib.pyplot.pie
 
 
 
@@ -192,6 +194,49 @@ plt.scatter(ratings, score_a, color = 'b')
 plt.title("Average Top Movie User Scores by Rating")
 plt.xlabel("Rating")
 plt.ylabel("Average User-Given Score")
+
+plt.show()
+
+
+#VISUAL 4 PIE CHART Showing Segmentation of the Top 100 Movies by Genre
+
+labels = 'PG', 'PG-13', 'R', 'G', 'N/A', 'Not Rated'
+sizes = [16, 46, 27, 4, 3,2]
+
+fig1, ax1 = plt.subplots()
+ax1.pie(sizes, labels=labels, autopct='%1.1f%%',
+        shadow=True, startangle=0)
+ax1.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
+plt.title("Percentage Segmentation of Top 100 Movies by Genre")
+
+
+plt.show()
+
+#VISUAL 5 BAR CHART illustrates the average box office by movie rating
+
+boxgenr1 = calculate_from_db('genre', 'boxoffice')
+#print(year_bo_dict)
+genre = list(boxgenr1.keys())
+total = boxgenr1.values()
+avg_box = []
+
+for i in total:
+    sums = 0
+    len_score = len(i)
+    if len_score > 0:
+        for x in i:
+            sums += x
+        avg_ = sums/len_score
+        avg_box.append(avg_)
+    else:
+        avg_box.append(0)
+print(avg_box)
+
+plt.bar(genre, avg_box, color = ('green', 'blue', 'green', 'blue', 'green', 'blue', 'blue'))
+plt.xlabel("Genre")
+plt.ylabel("Mean Box Office Across Genre in $Billion USD")
+plt.title("Average Box Office by Genre for Top 100 Movies From List")
+plt.tight_layout()
 
 plt.show()
 
