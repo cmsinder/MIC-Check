@@ -78,27 +78,21 @@ cur.execute("SELECT rating, boxoffice FROM TitleAndRatings LEFT JOIN TitleAndBox
 
 ###   MATH    ###
 
-dict_of_ratings = {'G': [], 'PG': [], 'PG-13': [], 'R': [] ,'N/A': [], 'Not Rated' : [],'TV-MA' : [],'TV-PG': [] }
+dict_of_ratings = {'G': [], 'PG': [], 'PG-13': [], 'R': []}
 
 for row in cur:
     if row[0] == 'N/A':
+        continue
+    elif row[1] == 'N/A':
         continue
     elif row[0] == 'G':
         dict_of_ratings['G'].append(row[1])
     elif row[0] == 'PG':
         dict_of_ratings['PG'].append(row[1])
-    elif row[0] == 'TV-PG':
-        dict_of_ratings['TV-PG'].append(row[1])
     elif row[0] == 'PG-13':
         dict_of_ratings['PG-13'].append(row[1])
     elif row[0] == 'R':
         dict_of_ratings['R'].append(row[1])
-    elif row[0] == 'N/A':
-        dict_of_ratings['N/A'].append(row[1])
-    elif row[0] == 'Not Rated':
-        dict_of_ratings['Not Rated'].append(row[1])
-    elif row[0] == 'TV-MA':
-        dict_of_ratings['TV-MA'].append(row[1])
  
 
 #avg_G_bo = statistics.mean(dict_of_ratings['G'])
@@ -111,13 +105,12 @@ for row in cur:
 
 
 root_path = os.path.dirname(os.path.abspath(__file__))
-w_filename = root_path + '/' + "AverageBoxOfficeByRating.txt"
+w_filename = root_path + '/' + "Calculations.txt"
 outfile = open(w_filename, 'w')
 
 #for rating in dict_of_ratings.keys():
 #    outfile.write("The average money earned at the Box Office for movies rated {} was: $".format(rating) + str(round(statistics.mean(dict_of_ratings[rating]))) + '\n')
 
-outfile.close()
 
 
 
@@ -131,9 +124,11 @@ outfile.close()
 rating_bo_dict = calculate_from_db('rating', 'boxoffice')
 key1 = list(rating_bo_dict.keys())
 val = []
-for i in rating_bo_dict:
-    len1 = len(rating_bo_dict[i])
+for i in rating_bo_dict.items():
+    len1 = len(i[1])
     val.append(len1)
+    if i[0] in dict_of_ratings:
+        outfile.write("The average money earned at the box office for movies rated {} was: $".format(i[0]) + str(round(statistics.mean(rating_bo_dict[i[0]]))) + '\n')
 
 plt.bar(key1, val, color = ('green', 'blue', 'green', 'blue', 'green', 'blue', 'blue'))
 plt.xlabel("Movie Ratings")
@@ -145,6 +140,7 @@ plt.tight_layout()
 # print(val)
 plt.show()
 
+outfile.write('\n')
 
 
 #VISUAL 2 scatterplot of average box office each year
@@ -162,12 +158,17 @@ for box in total:
     avg = sum_bo/num
     avg_bo.append(avg)
 
+for i in year_bo_dict.items():
+    outfile.write('The average money earned at the box office for movies released in the year {} was: $'.format(i[0]) + str(round(statistics.mean(i[1]))) + '\n')
+
 plt.scatter(years, avg_bo, color = 'g')
 plt.title("Gauging Average Box Office Growth Year-Over-Year")
 plt.xlabel("Year")
 plt.ylabel("Mean Box Office Revenue (in $Billions USD)")
 
 plt.show()
+
+outfile.write('\n')
 
 #VISUAL 3 Scatterplot of average rating score by genre
 
@@ -190,6 +191,11 @@ for list1 in scores:
         #need to adjust scores for N/A rating
     
 
+for i in rating_score_bo.items():
+    if i[0] in dict_of_ratings:
+        outfile.write('The average Rotten Tomatoes score for movies rated {} was: '.format(i[0]) + str(round(statistics.mean(i[1]))) + '\n')
+
+
 plt.scatter(ratings, score_a, color = 'b')
 plt.title("Average Top Movie User Scores by Rating")
 plt.xlabel("Rating")
@@ -197,6 +203,7 @@ plt.ylabel("Average User-Given Score")
 
 plt.show()
 
+outfile.write('\n')
 
 #VISUAL 4 PIE CHART Showing Segmentation of the Top 100 Movies by Genre
 
@@ -208,6 +215,9 @@ ax1.pie(sizes, labels=labels, autopct='%1.1f%%',
         shadow=True, startangle=0)
 ax1.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
 plt.title("Percentage Segmentation of Top 100 Movies by Genre")
+
+
+
 
 
 plt.show()
@@ -230,7 +240,11 @@ for i in total:
         avg_box.append(avg_)
     else:
         avg_box.append(0)
-print(avg_box)
+
+for i in boxgenr1.items():
+    if len(i[1]) > 0:
+        outfile.write('The average money earned at the box office for movies with the genre {} was: $'.format(i[0]) + str(round(statistics.mean(i[1]))) + '\n')
+
 
 plt.bar(genre, avg_box, color = ('purple', 'blue', 'yellow', 'orange', 'green', 'purple', 'blue'))
 plt.xlabel("Genre")
@@ -240,3 +254,7 @@ plt.tight_layout()
 
 plt.show()
 
+outfile.write('\n')
+
+
+outfile.close()
